@@ -1,6 +1,7 @@
 package com.ohussar.mysticalarcane;
 
 import com.mojang.logging.LogUtils;
+import com.ohussar.mysticalarcane.Content.Blocks;
 import com.ohussar.mysticalarcane.Content.Items;
 
 import net.minecraftforge.api.distmarker.Dist;
