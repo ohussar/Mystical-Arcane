@@ -1,7 +1,6 @@
-package com.ohussar.mysticalarcane.Content;
+package com.ohussar.mysticalarcane;
 
-import com.ohussar.mysticalarcane.Main;
-
+import com.ohussar.mysticalarcane.Content.ItemAltarBlock;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -18,4 +17,5 @@ public class Blocks {
     public static void registerBlocks(IEventBus bus){
         BLOCKS.register(bus);
     }
+    //aaaaa
 }
