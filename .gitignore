@@ -397,6 +397,6 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-.gradle/*
-run/*
-build/*
+.gradle/
+run/
+build/
