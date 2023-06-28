@@ -1,6 +1,7 @@
-package com.ohussar.mysticalarcane;
+package com.ohussar.mysticalarcane.Content;
 
-import com.ohussar.mysticalarcane.Content.ItemAltarBlock;
+import com.ohussar.mysticalarcane.Main;
+import com.ohussar.mysticalarcane.Content.ItemAltar.ItemAltarBlock;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;

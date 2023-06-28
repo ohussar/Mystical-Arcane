@@ -14,6 +14,10 @@ public class Items {
     Main.MODID);
     public static final RegistryObject<Item> ITEM_ALTAR_BLOCK = ITEMS.register("itemaltar", 
     () -> new BlockItem(Blocks.ITEM_ALTAR.get(), new Item.Properties()));
+
+    public static final RegistryObject<Item> ARCANE_WAND = ITEMS.register("arcanewand", 
+    () -> new Item(new Item.Properties().durability(300)));
+
     public static void registerItems(IEventBus bus){
         ITEMS.register(bus);
     }

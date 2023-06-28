@@ -1,15 +1,18 @@
 package com.ohussar.mysticalarcane;
 
 import com.mojang.logging.LogUtils;
+import com.ohussar.mysticalarcane.Base.ModBlockEntities;
 import com.ohussar.mysticalarcane.Content.Blocks;
 import com.ohussar.mysticalarcane.Content.Items;
+import com.ohussar.mysticalarcane.Content.ItemAltar.ItemAltarBlockEntityRender;
+import com.ohussar.mysticalarcane.Networking.ModMessages;
 
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -35,16 +38,16 @@ public class Main
         LOGGER.info("Registered blocks from " + MODID + "!");
         Items.registerItems(modEventBus);
         LOGGER.info("Registered items from " + MODID + "!");
-        // Register the Deferred Register to the mod event bus so blocks get registered
-        // Register the Deferred Register to the mod event bus so items get registered
-        
-
+        ModBlockEntities.registerBlockEntitiesTypes(modEventBus);
+        LOGGER.info("Registered block entities types from " + MODID + "!");
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)
-    {}
+    {
+        ModMessages.register();
+    }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
 
@@ -53,8 +56,8 @@ public class Main
     public static class ClientModEvents
     {
         @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event)
-        {
+        public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event){
+            event.registerBlockEntityRenderer(ModBlockEntities.ITEM_ALTAR_ENTITY.get(), ItemAltarBlockEntityRender::new);
         }
     }
 }
