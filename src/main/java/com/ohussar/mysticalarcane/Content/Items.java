@@ -1,6 +1,7 @@
 package com.ohussar.mysticalarcane.Content;
 
 import com.ohussar.mysticalarcane.Main;
+import com.ohussar.mysticalarcane.Content.ArcaneWand.ArcaneWand;
 
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -16,7 +17,7 @@ public class Items {
     () -> new BlockItem(Blocks.ITEM_ALTAR.get(), new Item.Properties()));
 
     public static final RegistryObject<Item> ARCANE_WAND = ITEMS.register("arcanewand", 
-    () -> new Item(new Item.Properties().durability(300)));
+    () -> new ArcaneWand(new Item.Properties().durability(300)));
 
     public static void registerItems(IEventBus bus){
         ITEMS.register(bus);
