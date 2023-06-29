@@ -26,7 +26,7 @@ public class ItemAltarBlockEntityRender implements BlockEntityRenderer<ItemAltar
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         ItemStack stack = blockEntity.getHolding();
         poseStack.pushPose();
-        poseStack.translate(0.5f, 0.7f, 0.5f);
+        poseStack.translate(0.5f, 0.75f, 0.5f);
         poseStack.scale(0.3f, 0.3f, 0.3f);
         poseStack.mulPose(Vector3f.XP.rotationDegrees(90));
         
