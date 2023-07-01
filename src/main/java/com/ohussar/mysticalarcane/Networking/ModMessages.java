@@ -32,6 +32,12 @@ public class ModMessages {
                 .encoder(SyncInventoryClient::toBytes)
                 .consumerMainThread(SyncInventoryClient::handle)
                 .add();
+                
+        net.messageBuilder(SpawnWandProjectile.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(SpawnWandProjectile::new)
+                .encoder(SpawnWandProjectile::toBytes)
+                .consumerMainThread(SpawnWandProjectile::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

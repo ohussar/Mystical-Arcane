@@ -2,8 +2,10 @@ package com.ohussar.mysticalarcane;
 
 import com.mojang.logging.LogUtils;
 import com.ohussar.mysticalarcane.Base.ModBlockEntities;
+import com.ohussar.mysticalarcane.Base.ModEntities;
 import com.ohussar.mysticalarcane.Content.Blocks;
 import com.ohussar.mysticalarcane.Content.Items;
+import com.ohussar.mysticalarcane.Content.ArcaneWand.Projectile.WandProjectileRenderer;
 import com.ohussar.mysticalarcane.Content.ItemAltar.ItemAltarBlockEntityRender;
 import com.ohussar.mysticalarcane.Networking.ModMessages;
 
@@ -25,8 +27,6 @@ public class Main
     public static final String MODID = "mysticalarcane";
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
-    // Create a Deferred Register to hold Blocks which will all be registered under the "examplemod" namespace
-    // Create a Deferred Register to hold Items which will all be registered under the "examplemod" namespace
     
     public Main()
     {
@@ -40,6 +40,8 @@ public class Main
         LOGGER.info("Registered items from " + MODID + "!");
         ModBlockEntities.registerBlockEntitiesTypes(modEventBus);
         LOGGER.info("Registered block entities types from " + MODID + "!");
+        ModEntities.registerEntitiesTypes(modEventBus);
+        LOGGER.info("Registered entities types from " + MODID + "!");
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -58,6 +60,7 @@ public class Main
         @SubscribeEvent
         public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event){
             event.registerBlockEntityRenderer(ModBlockEntities.ITEM_ALTAR_ENTITY.get(), ItemAltarBlockEntityRender::new);
+            event.registerEntityRenderer(ModEntities.WAND_PROJECTILE.get(), WandProjectileRenderer::new);
         }
     }
 }
