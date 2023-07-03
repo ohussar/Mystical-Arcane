@@ -1,14 +1,20 @@
 package com.ohussar.mysticalarcane.Content.ArcaneWand;
 
+import com.ohussar.mysticalarcane.API.UtilFunctions;
 import com.ohussar.mysticalarcane.Base.ModEntities;
 import com.ohussar.mysticalarcane.Content.ArcaneWand.Projectile.WandProjectile;
+import com.ohussar.mysticalarcane.Content.ItemAltar.ItemAltarBlock;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 
 public class ArcaneWand extends Item {
@@ -23,15 +29,49 @@ public class ArcaneWand extends Item {
         
         if(!level.isClientSide() && hand == InteractionHand.MAIN_HAND){
             player.getCooldowns().addCooldown(this, 15);
-            player.getItemInHand(hand).hurtAndBreak(1, player, null);
-            WandProjectile proj = create_projectile(level, player);
-            player.level.addFreshEntity(proj);
+            BlockPos pos = UtilFunctions.getPlayerPOVHitResult(level, player, ClipContext.Fluid.NONE).getBlockPos();
+            Block altar = level.getBlockState(pos).getBlock();
+            if(altar instanceof ItemAltarBlock){
+                player.getItemInHand(hand).hurtAndBreak(1, player, null);
+            }
             return InteractionResultHolder.success(player.getItemInHand(hand));
+        }
+        // ------- client side interaction ------- //
+        if(level.isClientSide()){
+            createParticles(level, player);
         }
         return super.use(level, player, hand);
     }
 
-    public WandProjectile create_projectile(Level level, Player player){
+   private void createParticles(Level level, Player player){
+        BlockPos pos = UtilFunctions.getPlayerPOVHitResult(level, player, ClipContext.Fluid.NONE).getBlockPos();
+        Block altar = level.getBlockState(pos).getBlock();
+        if(altar instanceof ItemAltarBlock){
+            Vec3 startpos = player.getEyePosition();
+
+            Vec3 endpos = new Vec3(pos.getX()+0.5, pos.getY()+0.8, pos.getZ()+0.5);
+            Vec3 angle = endpos.subtract(startpos).normalize();
+
+            // float f = -Mth.sin(player.getYRot() * ((float)Math.PI / 180F)) * Mth.cos(player.getXRot() * ((float)Math.PI / 180F));
+            // float f1 = -Mth.sin((player.getXRot()) * ((float)Math.PI / 180F));
+            // float f2 = Mth.cos(player.getYRot() * ((float)Math.PI / 180F)) * Mth.cos(player.getXRot() * ((float)Math.PI / 180F));
+            // Vec3 angle = new Vec3(f, f1, f2);
+            //angle = angle.normalize();
+            double distance = startpos.distanceToSqr(endpos);
+            int particleperunit = 2;
+            int minparticles = 4;
+            int particlecount = (int)(Math.sqrt(distance) * particleperunit);
+            particlecount = Math.max(minparticles, particlecount);
+            double factor = Math.sqrt(distance)/particlecount;
+            for(int i = 1; i < particlecount; i++){
+                level.addParticle(ParticleTypes.FIREWORK, 
+                startpos.x + angle.x*i*factor, startpos.y + angle.y*i*factor, startpos.z + angle.z*i*factor, 
+                0, 0, 0);
+            }
+        }
+   }
+
+    public WandProjectile createProjectile(Level level, Player player){
         WandProjectile proj = new WandProjectile(ModEntities.WAND_PROJECTILE.get(), level);
         proj.setPos(player.getX(), player.getY()+1.5, player.getZ());
         Vec3 motion = player.getLookAngle().normalize().scale(3.0);

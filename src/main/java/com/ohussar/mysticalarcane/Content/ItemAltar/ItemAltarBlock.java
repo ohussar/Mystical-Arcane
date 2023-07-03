@@ -1,6 +1,7 @@
 package com.ohussar.mysticalarcane.Content.ItemAltar;
 
 import com.ohussar.mysticalarcane.Base.ModBlockEntities;
+import com.ohussar.mysticalarcane.Content.ArcaneWand.ArcaneWand;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -32,18 +33,24 @@ public class ItemAltarBlock extends BaseEntityBlock {
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player,
             InteractionHand interactionHand, BlockHitResult blockHit) {
+        ItemStack stack = player.getMainHandItem();
         if(!level.isClientSide() && interactionHand == InteractionHand.MAIN_HAND){
-            ItemStack stack = player.getMainHandItem();
+            
             BlockEntity blockEntity = level.getBlockEntity(blockPos);
-            if(blockEntity instanceof ItemAltarBlockEntity){
+            if(blockEntity instanceof ItemAltarBlockEntity &&
+                !(stack.getItem() instanceof ArcaneWand) ){
                 ((ItemAltarBlockEntity)blockEntity).exchangeItem(stack, player);
+                return InteractionResult.SUCCESS;
+            }else if(stack.getItem() instanceof ArcaneWand){
+                return InteractionResult.PASS;
             }
         }
-            
-
+        if(stack.getItem() instanceof ArcaneWand){
+            return InteractionResult.PASS;
+        }
         return InteractionResult.sidedSuccess(level.isClientSide());
     }
-
+    
     @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext context){
         return SHAPE;
