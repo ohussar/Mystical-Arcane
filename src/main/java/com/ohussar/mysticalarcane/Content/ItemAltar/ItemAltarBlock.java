@@ -27,6 +27,7 @@ public class ItemAltarBlock extends BaseEntityBlock {
         super(properties);
     }
 
+
     private static final VoxelShape SHAPE = 
     Block.box(0, 0, 0, 16, 9, 16);
 
@@ -35,7 +36,6 @@ public class ItemAltarBlock extends BaseEntityBlock {
             InteractionHand interactionHand, BlockHitResult blockHit) {
         ItemStack stack = player.getMainHandItem();
         if(!level.isClientSide() && interactionHand == InteractionHand.MAIN_HAND){
-            
             BlockEntity blockEntity = level.getBlockEntity(blockPos);
             if(blockEntity instanceof ItemAltarBlockEntity &&
                 !(stack.getItem() instanceof ArcaneWand) ){

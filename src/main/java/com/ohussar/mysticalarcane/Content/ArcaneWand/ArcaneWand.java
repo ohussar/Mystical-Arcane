@@ -1,10 +1,9 @@
 package com.ohussar.mysticalarcane.Content.ArcaneWand;
 
 import com.ohussar.mysticalarcane.API.UtilFunctions;
-import com.ohussar.mysticalarcane.Base.ModEntities;
-import com.ohussar.mysticalarcane.Content.ArcaneWand.Projectile.WandProjectile;
 import com.ohussar.mysticalarcane.Content.ItemAltar.ItemAltarBlock;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.InteractionHand;
@@ -21,9 +20,8 @@ public class ArcaneWand extends Item {
 
     public ArcaneWand(Properties properties) {
         super(properties);
-        
     }
-    
+    public Minecraft mine;
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         
@@ -37,7 +35,7 @@ public class ArcaneWand extends Item {
             return InteractionResultHolder.success(player.getItemInHand(hand));
         }
         // ------- client side interaction ------- //
-        if(level.isClientSide()){
+        if(level.isClientSide() && hand == InteractionHand.MAIN_HAND){
             createParticles(level, player);
         }
         return super.use(level, player, hand);
@@ -48,15 +46,8 @@ public class ArcaneWand extends Item {
         Block altar = level.getBlockState(pos).getBlock();
         if(altar instanceof ItemAltarBlock){
             Vec3 startpos = player.getEyePosition();
-
             Vec3 endpos = new Vec3(pos.getX()+0.5, pos.getY()+0.8, pos.getZ()+0.5);
             Vec3 angle = endpos.subtract(startpos).normalize();
-
-            // float f = -Mth.sin(player.getYRot() * ((float)Math.PI / 180F)) * Mth.cos(player.getXRot() * ((float)Math.PI / 180F));
-            // float f1 = -Mth.sin((player.getXRot()) * ((float)Math.PI / 180F));
-            // float f2 = Mth.cos(player.getYRot() * ((float)Math.PI / 180F)) * Mth.cos(player.getXRot() * ((float)Math.PI / 180F));
-            // Vec3 angle = new Vec3(f, f1, f2);
-            //angle = angle.normalize();
             double distance = startpos.distanceToSqr(endpos);
             int particleperunit = 2;
             int minparticles = 4;
@@ -70,13 +61,4 @@ public class ArcaneWand extends Item {
             }
         }
    }
-
-    public WandProjectile createProjectile(Level level, Player player){
-        WandProjectile proj = new WandProjectile(ModEntities.WAND_PROJECTILE.get(), level);
-        proj.setPos(player.getX(), player.getY()+1.5, player.getZ());
-        Vec3 motion = player.getLookAngle().normalize().scale(3.0);
-        proj.setDeltaMovement(motion);
-        return proj;
-    }
-
 }

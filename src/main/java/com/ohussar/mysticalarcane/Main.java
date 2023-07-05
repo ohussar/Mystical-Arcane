@@ -3,7 +3,7 @@ package com.ohussar.mysticalarcane;
 import com.mojang.logging.LogUtils;
 import com.ohussar.mysticalarcane.Base.ModBlockEntities;
 import com.ohussar.mysticalarcane.Base.ModEntities;
-import com.ohussar.mysticalarcane.Content.Blocks;
+import com.ohussar.mysticalarcane.Content.ModBlocks;
 import com.ohussar.mysticalarcane.Content.Items;
 import com.ohussar.mysticalarcane.Content.ArcaneWand.Projectile.WandProjectileRenderer;
 import com.ohussar.mysticalarcane.Content.ItemAltar.ItemAltarBlockEntityRender;
@@ -34,7 +34,7 @@ public class Main
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
-        Blocks.registerBlocks(modEventBus);
+        ModBlocks.registerBlocks(modEventBus);
         LOGGER.info("Registered blocks from " + MODID + "!");
         Items.registerItems(modEventBus);
         LOGGER.info("Registered items from " + MODID + "!");

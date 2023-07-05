@@ -14,7 +14,7 @@ public class Items {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, 
     Main.MODID);
     public static final RegistryObject<Item> ITEM_ALTAR_BLOCK = ITEMS.register("itemaltar", 
-    () -> new BlockItem(Blocks.ITEM_ALTAR.get(), new Item.Properties()));
+    () -> new BlockItem(ModBlocks.ITEM_ALTAR.get(), new Item.Properties()));
 
     public static final RegistryObject<Item> ARCANE_WAND = ITEMS.register("arcanewand", 
     () -> new ArcaneWand(new Item.Properties().durability(300)));

@@ -10,7 +10,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class Blocks {
+public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS = 
     DeferredRegister.create(ForgeRegistries.BLOCKS, Main.MODID);
     public static final RegistryObject<Block> ITEM_ALTAR = BLOCKS.register("itemaltar", 
@@ -18,5 +18,4 @@ public class Blocks {
     public static void registerBlocks(IEventBus bus){
         BLOCKS.register(bus);
     }
-    //aaaaa
 }

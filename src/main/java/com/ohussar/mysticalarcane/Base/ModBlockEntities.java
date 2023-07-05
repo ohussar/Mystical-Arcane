@@ -1,7 +1,7 @@
 package com.ohussar.mysticalarcane.Base;
 
 import com.ohussar.mysticalarcane.Main;
-import com.ohussar.mysticalarcane.Content.Blocks;
+import com.ohussar.mysticalarcane.Content.ModBlocks;
 import com.ohussar.mysticalarcane.Content.ItemAltar.ItemAltarBlockEntity;
 
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -16,7 +16,7 @@ public class ModBlockEntities {
 
     public static final RegistryObject<BlockEntityType<ItemAltarBlockEntity>> ITEM_ALTAR_ENTITY = 
         BLOCK_ENTITIES.register("itemaltar", 
-        () -> BlockEntityType.Builder.of(ItemAltarBlockEntity::new, Blocks.ITEM_ALTAR.get()).build(null));
+        () -> BlockEntityType.Builder.of(ItemAltarBlockEntity::new, ModBlocks.ITEM_ALTAR.get()).build(null));
 
     public static void registerBlockEntitiesTypes(IEventBus bus){
         BLOCK_ENTITIES.register(bus);
