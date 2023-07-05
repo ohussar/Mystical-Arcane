@@ -3,7 +3,6 @@ package com.ohussar.mysticalarcane.Content.ArcaneWand;
 import com.ohussar.mysticalarcane.API.UtilFunctions;
 import com.ohussar.mysticalarcane.Content.ItemAltar.ItemAltarBlock;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.InteractionHand;
@@ -21,7 +20,6 @@ public class ArcaneWand extends Item {
     public ArcaneWand(Properties properties) {
         super(properties);
     }
-    public Minecraft mine;
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         

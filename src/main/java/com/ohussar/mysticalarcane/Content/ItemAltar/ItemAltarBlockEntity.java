@@ -109,7 +109,6 @@ public class ItemAltarBlockEntity extends BlockEntity {
             checkAssembled(level, new BlockPos(pos.getX()-offsetX, pos.getY()-1, pos.getZ()-offsetY));
         }
 
-
         if(level.isClientSide()){
             //client side interactions
             if(isAssembled){

@@ -9,6 +9,8 @@ import com.ohussar.mysticalarcane.Content.ArcaneWand.Projectile.WandProjectileRe
 import com.ohussar.mysticalarcane.Content.ItemAltar.ItemAltarBlockEntityRender;
 import com.ohussar.mysticalarcane.Networking.ModMessages;
 
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -48,7 +50,13 @@ public class Main
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
-        ModMessages.register();
+        event.enqueueWork(() -> {
+            ((FlowerPotBlock)Blocks.FLOWER_POT).addPlant(ModBlocks.MANA_ORCHID.getId(), () -> ModBlocks.POTTED_MANA_ORCHID.get());
+            ModMessages.register();
+        });
+
+        
+
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call

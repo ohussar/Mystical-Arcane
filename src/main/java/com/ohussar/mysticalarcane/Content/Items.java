@@ -18,7 +18,8 @@ public class Items {
 
     public static final RegistryObject<Item> ARCANE_WAND = ITEMS.register("arcanewand", 
     () -> new ArcaneWand(new Item.Properties().durability(300)));
-
+    public static final RegistryObject<Item> MANA_ORCHID = ITEMS.register("manaorchid", 
+    () -> new BlockItem(ModBlocks.MANA_ORCHID.get(), new Item.Properties()));
     public static void registerItems(IEventBus bus){
         ITEMS.register(bus);
     }

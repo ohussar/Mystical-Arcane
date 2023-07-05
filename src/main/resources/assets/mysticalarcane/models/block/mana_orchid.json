@@ -1,0 +1,7 @@
+{
+    "parent": "minecraft:block/cross",
+    "textures": {
+        "cross": "mysticalarcane:blocks/mana_orchid"
+    },
+    "render_type": "cutout"
+}
