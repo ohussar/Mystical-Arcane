@@ -15,7 +15,7 @@ public class SpawnParticles {
     private final Vec3 pos;
     private final Vec3 spd;
     private final ParticleOptions particle;
-
+    private final double velmultiplier;
     private int number = 0;
     private double radius = 0;
 
@@ -29,10 +29,12 @@ public class SpawnParticles {
         this.spd = spd;
         this.particle = particle;
         this.custom = custom;
+        this.velmultiplier = 1;
     }
     public SpawnParticles(FriendlyByteBuf buf){
         this.pos = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
         this.spd = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+        this.velmultiplier = buf.readDouble();
         this.particle = fromInt(buf.readInt());
         this.custom = buf.readEnum(CUSTOM_FUNCTIONS.class);
         if(custom == CUSTOM_FUNCTIONS.randomCircle){
@@ -41,13 +43,14 @@ public class SpawnParticles {
         }
     }
 
-    public SpawnParticles(ParticleOptions particle, Vec3 pos, int n, double radius){
+    public SpawnParticles(ParticleOptions particle, Vec3 pos, int n, double radius, double velmult){
         this.pos = pos;
         this.spd = new Vec3(0, 0, 0);
         this.particle = particle;
         this.custom = CUSTOM_FUNCTIONS.randomCircle;
         this.radius = radius;
         this.number = n;
+        this.velmultiplier = velmult;
     }
 
     public int toInt(ParticleOptions p){
@@ -76,7 +79,7 @@ public class SpawnParticles {
                     double xx = Math.cos(2*Math.PI/number * i);
                     double zz = Math.sin(2*Math.PI/number * i);
                     Vec3 p = new Vec3(xx * radius + pos.x, pos.y,  zz* radius + pos.z);
-                    Vec3 spd = new Vec3(xx, 0, zz).scale(0.125f);
+                    Vec3 spd = new Vec3(xx, 0, zz).scale(0.125f).scale(velmultiplier);
                     level.addParticle(particle, p.x, p.y, p.z, spd.x, spd.y, spd.z);
                 }
             break;
@@ -94,7 +97,7 @@ public class SpawnParticles {
         buf.writeDouble(spd.x);
         buf.writeDouble(spd.y);
         buf.writeDouble(spd.z);
-
+        buf.writeDouble(velmultiplier);
         buf.writeInt(toInt(particle));   
         buf.writeEnum(custom);
         if(custom == CUSTOM_FUNCTIONS.randomCircle){

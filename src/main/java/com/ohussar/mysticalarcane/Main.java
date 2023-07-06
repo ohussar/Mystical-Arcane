@@ -4,13 +4,13 @@ import com.mojang.logging.LogUtils;
 import com.ohussar.mysticalarcane.Base.ModBlockEntities;
 import com.ohussar.mysticalarcane.Base.ModEntities;
 import com.ohussar.mysticalarcane.Base.ModParticles;
+import com.ohussar.mysticalarcane.Base.ModRecipes;
 import com.ohussar.mysticalarcane.Content.ModBlocks;
 import com.ohussar.mysticalarcane.Content.Items;
 import com.ohussar.mysticalarcane.Content.ArcaneWand.Projectile.WandProjectileRenderer;
 import com.ohussar.mysticalarcane.Content.ItemAltar.ItemAltarBlockEntityRender;
 import com.ohussar.mysticalarcane.Content.Particles.ManaParticle;
 import com.ohussar.mysticalarcane.Networking.ModMessages;
-
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraftforge.api.distmarker.Dist;
@@ -47,6 +47,7 @@ public class Main
         ModEntities.registerEntitiesTypes(modEventBus);
         LOGGER.info("Registered entities types from " + MODID + "!");
         ModParticles.RegisterParticleTypes(modEventBus);
+        ModRecipes.registerRecipes(modEventBus);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -57,9 +58,6 @@ public class Main
             ((FlowerPotBlock)Blocks.FLOWER_POT).addPlant(ModBlocks.MANA_ORCHID.getId(), () -> ModBlocks.POTTED_MANA_ORCHID.get());
             ModMessages.register();
         });
-
-        
-
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call

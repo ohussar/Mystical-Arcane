@@ -16,7 +16,7 @@ public class Items {
     public static final RegistryObject<Item> ITEM_ALTAR_BLOCK = ITEMS.register("item_altar", 
     () -> new BlockItem(ModBlocks.ITEM_ALTAR.get(), new Item.Properties()));
 
-    public static final RegistryObject<Item> ARCANE_WAND = ITEMS.register("arcanewand", 
+    public static final RegistryObject<Item> ARCANE_WAND = ITEMS.register("arcane_wand", 
     () -> new ArcaneWand(new Item.Properties().durability(300)));
     public static final RegistryObject<Item> MANA_ORCHID = ITEMS.register("mana_orchid", 
     () -> new BlockItem(ModBlocks.MANA_ORCHID.get(), new Item.Properties()));

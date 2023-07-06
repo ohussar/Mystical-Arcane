@@ -1,13 +1,15 @@
 package com.ohussar.mysticalarcane.Content.ItemAltar;
 
+import java.util.Optional;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.ohussar.mysticalarcane.Base.ModBlockEntities;
 import com.ohussar.mysticalarcane.Base.ModParticles;
 import com.ohussar.mysticalarcane.Base.Multiblock;
-import com.ohussar.mysticalarcane.Content.Items;
 import com.ohussar.mysticalarcane.Content.ModBlocks;
+import com.ohussar.mysticalarcane.Content.Recipes.ItemAltarRecipe;
 import com.ohussar.mysticalarcane.Networking.ModMessages;
 import com.ohussar.mysticalarcane.Networking.SpawnParticles;
 import com.ohussar.mysticalarcane.Networking.SyncHeightModelAltar;
@@ -23,6 +25,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -50,7 +53,9 @@ public class ItemAltarBlockEntity extends BlockEntity {
                               "k", "k", "x", "k", "k"};
     private static int offsetX = 2;
     private static int offsetZ = 2;
-
+    private static int limitPerFlower = 2;
+    private static int flowerCount = 4;
+    private static Block flowerBlock = ModBlocks.MANA_ORCHID.get();
     private static Multiblock structure = new Multiblock(struct, 5, 5);
     private static int multiblockCheckTimer = 0;
     private static boolean isAssembled = false;
@@ -64,7 +69,7 @@ public class ItemAltarBlockEntity extends BlockEntity {
 
     public ItemAltarBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(ModBlockEntities.ITEM_ALTAR_ENTITY.get(), blockPos, blockState);
-        structure.setDictionaryKey("x", ModBlocks.MANA_ORCHID.get());
+        structure.setDictionaryKey("x", flowerBlock);
         structure.setDictionaryKey("o", Blocks.AIR);
         structure.setDictionaryKey("a", ModBlocks.ITEM_ALTAR.get());
         structure.setDictionaryKey("k", null);
@@ -146,34 +151,95 @@ public class ItemAltarBlockEntity extends BlockEntity {
             }
             if(entity.craftingStage == 2){
                 if(timer == 0){
-                    ModMessages.sendToClients(new SpawnParticles(ModParticles.MANA_PARTICLE.get(), 
-                    new Vec3(pos.getX()+0.5, pos.getY() + 2, pos.getZ() + 0.5), 25, 1));
-                    
-                    entity.holding.setStackInSlot(0, new ItemStack(Items.MANA_INGOT.get()));
+                    if(hasRecipe(entity)){
+                        int itemCount = entity.holding.getStackInSlot(0).getCount();
+                        ModMessages.sendToClients(new SpawnParticles(ModParticles.MANA_PARTICLE.get(), 
+                        new Vec3(pos.getX()+0.5, pos.getY() + 2, pos.getZ() + 0.5), itemCount * 4, 1, 1.25));
+
+                        entity.holding.setStackInSlot(0, 
+                        new ItemStack(getRecipe(entity).get().getResultItem().getItem(), itemCount));
+
+                        int angles = (int)Math.ceil((double)itemCount/(double)limitPerFlower);
+                        for(int k = 0; k < angles; k++){
+                            BlockPos f = new BlockPos(pos.getX() + sin(k)*2, pos.getY(), pos.getZ() + cos(k)*2);
+                            BlockState b = level.getBlockState(f);
+                            if(b.getBlock() == flowerBlock){
+                                level.setBlock(f, Blocks.AIR.defaultBlockState(), 1);
+                                level.sendBlockUpdated(f, b, Blocks.AIR.defaultBlockState(), 2);
+                                ModMessages.sendToClients(new SpawnParticles(ModParticles.MANA_PARTICLE.get(), 
+                                new Vec3(f.getX() + 0.5, f.getY() + 0.25, f.getZ() + 0.5), 8, 0.5, 0.5));
+                            }
+                        }
+                    }else{
+                        entity.craftingStage = 3;
+                    }
                 }
-                timer++;
-                if(timer >= 10){
-                    timer = 0;
-                    entity.craftingStage = 3;
-                }
-            }
-            if(entity.craftingStage == 3){
-                entity.craftingModelHeight -= 0.01f;
-                if(entity.craftingModelHeight <= entity.craftingModelHeightMin){
-                    entity.craftingModelHeight = entity.craftingModelHeightMin;
-                    entity.craftingStage = 0;
-                    entity.isCrafting = false;
-                }
-                ModMessages.sendToClients(new SyncHeightModelAltar(entity.craftingModelHeight, pos));
-                
             }
         }
-        
+        if(entity.craftingStage == 2 && entity.isCrafting){
+            timer++;
+            if(timer >= 10){
+                timer = 0;
+                entity.craftingStage = 3;
+            }
+        }
+        if(entity.craftingStage == 3 && entity.isCrafting){
+            entity.craftingModelHeight -= 0.025f;
+            if(entity.craftingModelHeight <= entity.craftingModelHeightMin){
+                entity.craftingModelHeight = entity.craftingModelHeightMin;
+                entity.craftingStage = 0;
+                entity.isCrafting = false;
+                timer = 0;
+            }
+            ModMessages.sendToClients(new SyncHeightModelAltar(entity.craftingModelHeight, pos));
+        }
     }
 
+    private static int cos(int index){
+        switch(index){
+            case 0:
+                return 1;
+            case 1:
+                return 0;
+            case 2:
+                return -1;
+            case 3:
+                return 0;
+            default:
+                return 0;
+        }
+    }
+   
+    private static int sin(int index){
+        switch(index){
+            case 0:
+                return 0;
+            case 1:
+                return 1;
+            case 2:
+                return 0;
+            case 3:
+                return -1;
+            default:
+                return 0;
+        }
+    } 
 
-    public void startCrafting(){
-        if(isAssembled){
+    private static Optional<ItemAltarRecipe> getRecipe(ItemAltarBlockEntity entity){
+        Level level = entity.level;
+        SimpleContainer inventory = new SimpleContainer(1);
+        inventory.setItem(0, entity.holding.getStackInSlot(0));
+
+        Optional<ItemAltarRecipe> recipe = level.getRecipeManager().getRecipeFor
+        (ItemAltarRecipe.Type.INSTANCE, inventory, level); 
+        return recipe;
+    }
+    public static boolean hasRecipe(ItemAltarBlockEntity entity){
+        return getRecipe(entity).isPresent();
+    }
+
+    public void startCrafting(ItemAltarBlockEntity entity){
+        if(isAssembled && hasRecipe(entity) && entity.holding.getStackInSlot(0).getCount() <= (limitPerFlower * flowerCount)){
             isCrafting = true;
         }
     }

@@ -34,7 +34,7 @@ public class ArcaneWand extends Item {
                 BlockEntity block = level.getBlockEntity(pos);
                 if(block instanceof ItemAltarBlockEntity){
                     ItemAltarBlockEntity altarentity = (ItemAltarBlockEntity) block;
-                    altarentity.startCrafting();
+                    altarentity.startCrafting(altarentity);
                 }
             }
             return InteractionResultHolder.success(player.getItemInHand(hand));
