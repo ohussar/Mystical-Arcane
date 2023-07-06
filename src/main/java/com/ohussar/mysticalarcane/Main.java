@@ -3,16 +3,19 @@ package com.ohussar.mysticalarcane;
 import com.mojang.logging.LogUtils;
 import com.ohussar.mysticalarcane.Base.ModBlockEntities;
 import com.ohussar.mysticalarcane.Base.ModEntities;
+import com.ohussar.mysticalarcane.Base.ModParticles;
 import com.ohussar.mysticalarcane.Content.ModBlocks;
 import com.ohussar.mysticalarcane.Content.Items;
 import com.ohussar.mysticalarcane.Content.ArcaneWand.Projectile.WandProjectileRenderer;
 import com.ohussar.mysticalarcane.Content.ItemAltar.ItemAltarBlockEntityRender;
+import com.ohussar.mysticalarcane.Content.Particles.ManaParticle;
 import com.ohussar.mysticalarcane.Networking.ModMessages;
 
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -28,12 +31,11 @@ public class Main
     // Define mod id in a common place for everything to reference
     public static final String MODID = "mysticalarcane";
     // Directly reference a slf4j logger
-    private static final Logger LOGGER = LogUtils.getLogger();
-    
+    public static final Logger LOGGER = LogUtils.getLogger();
     public Main()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
+        
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
         ModBlocks.registerBlocks(modEventBus);
@@ -44,6 +46,7 @@ public class Main
         LOGGER.info("Registered block entities types from " + MODID + "!");
         ModEntities.registerEntitiesTypes(modEventBus);
         LOGGER.info("Registered entities types from " + MODID + "!");
+        ModParticles.RegisterParticleTypes(modEventBus);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -69,6 +72,11 @@ public class Main
         public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event){
             event.registerBlockEntityRenderer(ModBlockEntities.ITEM_ALTAR_ENTITY.get(), ItemAltarBlockEntityRender::new);
             event.registerEntityRenderer(ModEntities.WAND_PROJECTILE.get(), WandProjectileRenderer::new);
+        }
+
+        @SubscribeEvent
+        public static void registerParticleFactories(final RegisterParticleProvidersEvent event){
+            event.register(ModParticles.MANA_PARTICLE.get(), ManaParticle.Provider::new);
         }
     }
 }

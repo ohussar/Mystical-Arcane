@@ -38,6 +38,16 @@ public class ModMessages {
                 .encoder(SpawnWandProjectile::toBytes)
                 .consumerMainThread(SpawnWandProjectile::handle)
                 .add();
+        net.messageBuilder(SyncHeightModelAltar.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SyncHeightModelAltar::new)
+                .encoder(SyncHeightModelAltar::toBytes)
+                .consumerMainThread(SyncHeightModelAltar::handle)
+                .add();
+        net.messageBuilder(SpawnParticles.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SpawnParticles::new)
+                .encoder(SpawnParticles::toBytes)
+                .consumerMainThread(SpawnParticles::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

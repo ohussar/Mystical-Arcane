@@ -4,13 +4,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.ohussar.mysticalarcane.Base.ModBlockEntities;
+import com.ohussar.mysticalarcane.Base.ModParticles;
 import com.ohussar.mysticalarcane.Base.Multiblock;
+import com.ohussar.mysticalarcane.Content.Items;
+import com.ohussar.mysticalarcane.Content.ModBlocks;
 import com.ohussar.mysticalarcane.Networking.ModMessages;
+import com.ohussar.mysticalarcane.Networking.SpawnParticles;
+import com.ohussar.mysticalarcane.Networking.SyncHeightModelAltar;
 import com.ohussar.mysticalarcane.Networking.SyncInventoryClient;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Containers;
@@ -22,6 +26,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -38,21 +43,31 @@ public class ItemAltarBlockEntity extends BlockEntity {
         }
     };
 
-    static String[] struct = {"o", "x", "o",
-                              "x", "x", "x",
-                              "o", "x", "o"};
-    private static int offsetX = 1;
-    private static int offsetY = 1;
+    static String[] struct = {"k", "k", "x", "k", "k",
+                              "k", "o", "o", "o", "k",
+                              "x", "o", "a", "o", "x",
+                              "k", "o", "o", "o", "k",
+                              "k", "k", "x", "k", "k"};
+    private static int offsetX = 2;
+    private static int offsetZ = 2;
 
-    private static Multiblock structure = new Multiblock(struct, 3, 3);
+    private static Multiblock structure = new Multiblock(struct, 5, 5);
     private static int multiblockCheckTimer = 0;
     private static boolean isAssembled = false;
+    public boolean isCrafting = false;
+    private int craftingStage = 0;
+    public float craftingModelHeightMin = 0.7f;
+    public float craftingModelHeight = 0.7f;
+    public float craftingModelHeightMax = 2.0f;
+    private static int timer = 0;
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
     public ItemAltarBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(ModBlockEntities.ITEM_ALTAR_ENTITY.get(), blockPos, blockState);
-        structure.setDictionaryKey("x", Blocks.IRON_BLOCK);
+        structure.setDictionaryKey("x", ModBlocks.MANA_ORCHID.get());
         structure.setDictionaryKey("o", Blocks.AIR);
+        structure.setDictionaryKey("a", ModBlocks.ITEM_ALTAR.get());
+        structure.setDictionaryKey("k", null);
     }
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
@@ -106,28 +121,61 @@ public class ItemAltarBlockEntity extends BlockEntity {
         multiblockCheckTimer++;
         if(multiblockCheckTimer >= 10){
             multiblockCheckTimer = 0;
-            checkAssembled(level, new BlockPos(pos.getX()-offsetX, pos.getY()-1, pos.getZ()-offsetY));
+            BlockPos target = new BlockPos(pos.getX()-offsetX, pos.getY(), pos.getZ()-offsetZ);
+            isAssembled = structure.checkIfAssembled(level, target);
         }
 
         if(level.isClientSide()){
-            //client side interactions
-            if(isAssembled){
-                for(int x = 0; x < 2; x++){
-                    double numbx = Math.random() * 0.25 - 0.125;
-                    double numbz = Math.random() * 0.25 - 0.125;
-                    double numby = Math.random() * 0.75;
-
-                    level.addParticle(ParticleTypes.SMOKE, pos.getX() + numbx + 0.5, pos.getY() + 1, pos.getZ() + 0.5 + numbz,
-                    numbx, numby, numbz);
-                }
-            }
             return;
         }
-
+        if(isAssembled && entity.isCrafting){
+            if(entity.craftingStage == 0){
+                entity.craftingModelHeight += 0.01f;
+                if(entity.craftingModelHeight >= entity.craftingModelHeightMax){
+                    entity.craftingModelHeight = entity.craftingModelHeightMax;
+                    entity.craftingStage = 1;
+                }
+                ModMessages.sendToClients(new SyncHeightModelAltar(entity.craftingModelHeight, pos));
+            }
+            if(entity.craftingStage == 1){
+                timer++;
+                if(timer >= 25){
+                    timer = 0;
+                    entity.craftingStage = 2;
+                }
+            }
+            if(entity.craftingStage == 2){
+                if(timer == 0){
+                    ModMessages.sendToClients(new SpawnParticles(ModParticles.MANA_PARTICLE.get(), 
+                    new Vec3(pos.getX()+0.5, pos.getY() + 2, pos.getZ() + 0.5), 25, 1));
+                    
+                    entity.holding.setStackInSlot(0, new ItemStack(Items.MANA_INGOT.get()));
+                }
+                timer++;
+                if(timer >= 10){
+                    timer = 0;
+                    entity.craftingStage = 3;
+                }
+            }
+            if(entity.craftingStage == 3){
+                entity.craftingModelHeight -= 0.01f;
+                if(entity.craftingModelHeight <= entity.craftingModelHeightMin){
+                    entity.craftingModelHeight = entity.craftingModelHeightMin;
+                    entity.craftingStage = 0;
+                    entity.isCrafting = false;
+                }
+                ModMessages.sendToClients(new SyncHeightModelAltar(entity.craftingModelHeight, pos));
+                
+            }
+        }
+        
     }
 
-    protected static void checkAssembled(Level level, BlockPos pos){
-        isAssembled = structure.checkIfAssembled(level, pos);
+
+    public void startCrafting(){
+        if(isAssembled){
+            isCrafting = true;
+        }
     }
 
     public void setHandler(ItemStackHandler itemStackHandler) {

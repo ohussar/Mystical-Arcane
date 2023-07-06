@@ -25,11 +25,11 @@ public class ItemAltarBlockEntityRender implements BlockEntityRenderer<ItemAltar
             MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         ItemStack stack = blockEntity.getHolding();
+        //float isCrafting = blockEntity.craftingModelHeight;
         poseStack.pushPose();
-        poseStack.translate(0.5f, 0.7f, 0.5f);
+        poseStack.translate(0.5f, blockEntity.craftingModelHeight, 0.5f);
         poseStack.scale(0.3f, 0.3f, 0.3f);
         poseStack.mulPose(Vector3f.XP.rotationDegrees(90));
-        
         itemRenderer.renderStatic(stack, ItemTransforms.TransformType.GUI, 
         getLightLevel(blockEntity.getLevel(), blockEntity.getBlockPos()), 
         OverlayTexture.NO_OVERLAY, poseStack, bufferSource, 1);

@@ -2,6 +2,7 @@ package com.ohussar.mysticalarcane.Content.ArcaneWand;
 
 import com.ohussar.mysticalarcane.API.UtilFunctions;
 import com.ohussar.mysticalarcane.Content.ItemAltar.ItemAltarBlock;
+import com.ohussar.mysticalarcane.Content.ItemAltar.ItemAltarBlockEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -13,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
 public class ArcaneWand extends Item {
@@ -29,6 +31,11 @@ public class ArcaneWand extends Item {
             Block altar = level.getBlockState(pos).getBlock();
             if(altar instanceof ItemAltarBlock){
                 player.getItemInHand(hand).hurtAndBreak(1, player, null);
+                BlockEntity block = level.getBlockEntity(pos);
+                if(block instanceof ItemAltarBlockEntity){
+                    ItemAltarBlockEntity altarentity = (ItemAltarBlockEntity) block;
+                    altarentity.startCrafting();
+                }
             }
             return InteractionResultHolder.success(player.getItemInHand(hand));
         }

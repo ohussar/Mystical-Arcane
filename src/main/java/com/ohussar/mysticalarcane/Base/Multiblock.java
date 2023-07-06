@@ -13,7 +13,7 @@ public class Multiblock {
     private String[] structure;
 
     private Map<String, Block> dictionary = new HashMap<String, Block>();
-
+    
     public Multiblock(String[] map, int width, int depth){
         this.structure = map;
         this.width = width;
@@ -28,8 +28,9 @@ public class Multiblock {
     public void removeDictionaryKey(String key){
         dictionary.remove(key);
     }
-
+    
     public boolean checkIfAssembled(Level level, BlockPos topLeftCorner){
+        boolean valid = true;
         for(int xx = 0; xx < width; xx++){
             for(int zz = 0; zz < depth; zz++){
                 int indexInArray = xx * width + zz;
@@ -38,15 +39,12 @@ public class Multiblock {
                     BlockPos target = new BlockPos(topLeftCorner.getX() + xx, topLeftCorner.getY(), topLeftCorner.getZ()+zz);
                     Block block2 = level.getBlockState(target).getBlock();
                     if(block2 != block){
-                        target = null;
-                        block2 = null;
-                        block = null;
-                        return false;
+                        valid = false;
                     }
                 }
             }
         }
-        return true;
+        return valid;
     }
 
 }

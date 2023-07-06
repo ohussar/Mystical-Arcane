@@ -39,7 +39,10 @@ public class ItemAltarBlock extends BaseEntityBlock {
             BlockEntity blockEntity = level.getBlockEntity(blockPos);
             if(blockEntity instanceof ItemAltarBlockEntity &&
                 !(stack.getItem() instanceof ArcaneWand) ){
-                ((ItemAltarBlockEntity)blockEntity).exchangeItem(stack, player);
+                ItemAltarBlockEntity AltarEntity = ((ItemAltarBlockEntity)blockEntity);
+                if(!AltarEntity.isCrafting){
+                    AltarEntity.exchangeItem(stack, player);
+                }
                 return InteractionResult.SUCCESS;
             }else if(stack.getItem() instanceof ArcaneWand){
                 return InteractionResult.PASS;
