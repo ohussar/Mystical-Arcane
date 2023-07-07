@@ -135,7 +135,23 @@ public class ItemAltarBlockEntity extends BlockEntity {
         }
         if(isAssembled && entity.isCrafting){
             if(entity.craftingStage == 0){
-                entity.craftingModelHeight += 0.01f;
+                entity.craftingModelHeight += 0.025f;
+                for(int k = 0; k < flowerCount; k++){
+                    BlockPos f = new BlockPos(pos.getX() + sin(k)*2, pos.getY(), pos.getZ() + cos(k)*2);
+                    BlockState b = level.getBlockState(f);
+                    if(b.getBlock() == flowerBlock){
+                        ModMessages.sendToClients(
+                            new SpawnParticles(ModParticles.MANA_PARTICLE.get(),
+                            new Vec3(f.getX() + 0.5, f.getY(), f.getZ() + 0.5), 
+                            new Vec3(pos.getX() + 0.5, pos.getY() + entity.craftingModelHeight, pos.getZ() + 0.5), 1, 0.075)
+                            );
+                    }
+                }
+
+
+
+
+
                 if(entity.craftingModelHeight >= entity.craftingModelHeightMax){
                     entity.craftingModelHeight = entity.craftingModelHeightMax;
                     entity.craftingStage = 1;
@@ -150,7 +166,7 @@ public class ItemAltarBlockEntity extends BlockEntity {
                 }
             }
             if(entity.craftingStage == 2){
-                if(timer == 0){
+
                     if(hasRecipe(entity)){
                         int itemCount = entity.holding.getStackInSlot(0).getCount();
                         ModMessages.sendToClients(new SpawnParticles(ModParticles.MANA_PARTICLE.get(), 
@@ -173,7 +189,6 @@ public class ItemAltarBlockEntity extends BlockEntity {
                     }else{
                         entity.craftingStage = 3;
                     }
-                }
             }
         }
         if(entity.craftingStage == 2 && entity.isCrafting){
