@@ -128,6 +128,7 @@ public class ItemAltarBlockEntity extends BlockEntity {
             multiblockCheckTimer = 0;
             BlockPos target = new BlockPos(pos.getX()-offsetX, pos.getY(), pos.getZ()-offsetZ);
             isAssembled = structure.checkIfAssembled(level, target);
+            target = null;
         }
 
         if(level.isClientSide()){

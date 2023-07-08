@@ -1,5 +1,6 @@
 package com.ohussar.mysticalarcane.Content.ItemAltar;
 
+import com.ohussar.mysticalarcane.Base.AbstractManaBlock;
 import com.ohussar.mysticalarcane.Base.ModBlockEntities;
 import com.ohussar.mysticalarcane.Content.ArcaneWand.ArcaneWand;
 
@@ -10,7 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -21,7 +21,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ItemAltarBlock extends BaseEntityBlock {
+public class ItemAltarBlock extends AbstractManaBlock {
 
     public ItemAltarBlock(Properties properties) {
         super(properties);
@@ -85,5 +85,14 @@ public class ItemAltarBlock extends BaseEntityBlock {
             BlockEntityType<T> blockEntityType) {
         
         return createTickerHelper(blockEntityType, ModBlockEntities.ITEM_ALTAR_ENTITY.get(), ItemAltarBlockEntity::tick);
+    }
+
+    @Override
+    public void actionOnClick(BlockPos pos, Level level) {
+        BlockEntity entity = level.getBlockEntity(pos);
+        if(entity instanceof ItemAltarBlockEntity){
+            ItemAltarBlockEntity altar = (ItemAltarBlockEntity) entity;
+            altar.startCrafting(altar);
+        }
     }
 }

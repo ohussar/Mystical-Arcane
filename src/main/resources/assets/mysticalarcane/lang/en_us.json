@@ -1,6 +1,6 @@
 {
     "block.mysticalarcane.item_altar": "Item Altar",
     "item.mysticalarcane.arcane_wand": "§6Arcane Wand",
-    "block.mysticalarcane.mana_orchid": "Mana Orchid",
-    "item.mysticalarcane.mana_ingot": "Mana Ingot"
+    "block.mysticalarcane.mana_orchid": "§cMana Orchid",
+    "item.mysticalarcane.mana_ingot": "§cMana Ingot"
 }
