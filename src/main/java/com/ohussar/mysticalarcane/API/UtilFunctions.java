@@ -1,5 +1,6 @@
 package com.ohussar.mysticalarcane.API;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
@@ -21,5 +22,9 @@ public class UtilFunctions {
       double d0 = p_41437_.getReachDistance();
       Vec3 vec31 = vec3.add((double)f6 * d0, (double)f5 * d0, (double)f7 * d0);
       return p_41436_.clip(new ClipContext(vec3, vec31, ClipContext.Block.OUTLINE, p_41438_, p_41437_));
+   }
+
+   public static Vec3 toVec3Offset(BlockPos pos, double xx, double yy, double zz){
+      return new Vec3(pos.getX() + xx, pos.getY() + yy, pos.getZ() + zz);
    }
 }

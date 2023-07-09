@@ -1,6 +1,7 @@
 package com.ohussar.mysticalarcane.Networking;
 
 import com.ohussar.mysticalarcane.Main;
+import com.ohussar.mysticalarcane.Networking.Tank.SyncFuelCount;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,12 +33,6 @@ public class ModMessages {
                 .encoder(SyncInventoryClient::toBytes)
                 .consumerMainThread(SyncInventoryClient::handle)
                 .add();
-                
-        net.messageBuilder(SpawnWandProjectile.class, id(), NetworkDirection.PLAY_TO_SERVER)
-                .decoder(SpawnWandProjectile::new)
-                .encoder(SpawnWandProjectile::toBytes)
-                .consumerMainThread(SpawnWandProjectile::handle)
-                .add();
         net.messageBuilder(SyncHeightModelAltar.class, id(), NetworkDirection.PLAY_TO_CLIENT)
                 .decoder(SyncHeightModelAltar::new)
                 .encoder(SyncHeightModelAltar::toBytes)
@@ -47,6 +42,16 @@ public class ModMessages {
                 .decoder(SpawnParticles::new)
                 .encoder(SpawnParticles::toBytes)
                 .consumerMainThread(SpawnParticles::handle)
+                .add();
+        net.messageBuilder(SyncFuelCount.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SyncFuelCount::new)
+                .encoder(SyncFuelCount::toBytes)
+                .consumerMainThread(SyncFuelCount::handle)
+                .add();
+        net.messageBuilder(SyncVariables.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SyncVariables::new)
+                .encoder(SyncVariables::toBytes)
+                .consumerMainThread(SyncVariables::handle)
                 .add();
     }
 

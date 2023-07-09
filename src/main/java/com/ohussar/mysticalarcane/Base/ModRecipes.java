@@ -1,6 +1,7 @@
 package com.ohussar.mysticalarcane.Base;
 
 import com.ohussar.mysticalarcane.Main;
+import com.ohussar.mysticalarcane.Content.Recipes.HolderRecipe;
 import com.ohussar.mysticalarcane.Content.Recipes.ItemAltarRecipe;
 
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -14,7 +15,8 @@ public class ModRecipes {
 
     public static final RegistryObject<RecipeSerializer<ItemAltarRecipe>> MANA_INFUSING_SERIALIZER = 
     RECIPE_SERIALIZER.register("mana_infusing", () -> ItemAltarRecipe.Serializer.INSTANCE);
-
+    public static final RegistryObject<RecipeSerializer<HolderRecipe>> MANA_CREATOR_SERIALIZER = 
+    RECIPE_SERIALIZER.register("mana_creator", () -> HolderRecipe.Serializer.INSTANCE);
     public static void registerRecipes(IEventBus bus){
         RECIPE_SERIALIZER.register(bus);
     }

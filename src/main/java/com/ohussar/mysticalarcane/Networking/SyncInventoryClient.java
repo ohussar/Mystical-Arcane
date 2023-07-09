@@ -6,7 +6,7 @@ import java.util.List;
 
 import java.util.function.Supplier;
 
-import com.ohussar.mysticalarcane.Content.ItemAltar.ItemAltarBlockEntity;
+import com.ohussar.mysticalarcane.API.IContentsChangedUpdate;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -17,7 +17,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 public class SyncInventoryClient {
     private final ItemStackHandler handler;
-    private final BlockPos pos;
+    private final BlockPos pos; 
     public SyncInventoryClient(ItemStackHandler handler, BlockPos pos){
         this.handler = handler;
         this.pos = pos;
@@ -44,8 +44,8 @@ public class SyncInventoryClient {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
             Minecraft mine = Minecraft.getInstance();
-            if(mine.level.getBlockEntity(pos) instanceof ItemAltarBlockEntity blockEntity){
-                blockEntity.setHandler(this.handler);
+            if(mine.level.getBlockEntity(pos) instanceof IContentsChangedUpdate blockEntity){
+                blockEntity.onContentsChanged(this.handler);
             }
         });
         return true;

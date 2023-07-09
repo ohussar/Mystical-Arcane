@@ -2,5 +2,8 @@
     "block.mysticalarcane.item_altar": "Item Altar",
     "item.mysticalarcane.arcane_wand": "§6Arcane Wand",
     "block.mysticalarcane.mana_orchid": "§cMana Orchid",
-    "item.mysticalarcane.mana_ingot": "§cMana Ingot"
+    "item.mysticalarcane.mana_ingot": "§cMana Ingot",
+    "block.mysticalarcane.holder": "Item Stand",
+    "block.mysticalarcane.tank": "Basin",
+    "itemGroup.mysticalarcane": "Mystical Arcane"
 }

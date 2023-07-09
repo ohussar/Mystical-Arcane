@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=north": {"model":"mysticalarcane:block/mana_receptor", "y": 270 },
+        "facing=south": {"model":"mysticalarcane:block/mana_receptor", "y": 90 },
+        "facing=west": {"model":"mysticalarcane:block/mana_receptor", "y": 180 },
+        "facing=east": {"model":"mysticalarcane:block/mana_receptor", "y": 0 }
+    }
+}

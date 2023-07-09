@@ -6,11 +6,15 @@ import com.ohussar.mysticalarcane.Base.ModEntities;
 import com.ohussar.mysticalarcane.Base.ModParticles;
 import com.ohussar.mysticalarcane.Base.ModRecipes;
 import com.ohussar.mysticalarcane.Content.ModBlocks;
-import com.ohussar.mysticalarcane.Content.Items;
-import com.ohussar.mysticalarcane.Content.ArcaneWand.Projectile.WandProjectileRenderer;
+import com.ohussar.mysticalarcane.Content.ModItems;
+import com.ohussar.mysticalarcane.Content.Holder.HolderEntityRenderer;
 import com.ohussar.mysticalarcane.Content.ItemAltar.ItemAltarBlockEntityRender;
 import com.ohussar.mysticalarcane.Content.Particles.ManaParticle;
+import com.ohussar.mysticalarcane.Content.Tank.TankEntityRender;
 import com.ohussar.mysticalarcane.Networking.ModMessages;
+
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraftforge.api.distmarker.Dist;
@@ -32,6 +36,14 @@ public class Main
     public static final String MODID = "mysticalarcane";
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
+
+    public static final CreativeModeTab TAB = new CreativeModeTab("mysticalarcane") {
+        @Override
+        public ItemStack makeIcon(){
+            return new ItemStack(ModItems.ARCANE_WAND.get());
+        }
+    };
+
     public Main()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -40,7 +52,7 @@ public class Main
         modEventBus.addListener(this::commonSetup);
         ModBlocks.registerBlocks(modEventBus);
         LOGGER.info("Registered blocks from " + MODID + "!");
-        Items.registerItems(modEventBus);
+        ModItems.registerItems(modEventBus);
         LOGGER.info("Registered items from " + MODID + "!");
         ModBlockEntities.registerBlockEntitiesTypes(modEventBus);
         LOGGER.info("Registered block entities types from " + MODID + "!");
@@ -69,7 +81,9 @@ public class Main
         @SubscribeEvent
         public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event){
             event.registerBlockEntityRenderer(ModBlockEntities.ITEM_ALTAR_ENTITY.get(), ItemAltarBlockEntityRender::new);
-            event.registerEntityRenderer(ModEntities.WAND_PROJECTILE.get(), WandProjectileRenderer::new);
+            event.registerBlockEntityRenderer(ModBlockEntities.TANK_ENTITY.get(), TankEntityRender::new);
+            event.registerBlockEntityRenderer(ModBlockEntities.HOLDER_ENTITY.get(), HolderEntityRenderer::new);
+            //event.registerEntityRenderer(ModEntities.WAND_PROJECTILE.get(), WandProjectileRenderer::new);
         }
 
         @SubscribeEvent

@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "isabove=true" : {"model": "mysticalarcane:block/holderlegs"},
+        "isabove=false": {"model": "mysticalarcane:block/holder"}
+    }
+}

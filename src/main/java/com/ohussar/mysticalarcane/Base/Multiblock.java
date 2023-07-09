@@ -28,7 +28,30 @@ public class Multiblock {
     public void removeDictionaryKey(String key){
         dictionary.remove(key);
     }
-    
+    public BlockPos[] getListOfBlocksPlaced(String key, Level level, BlockPos topLeftCorner){
+        int count = 0;
+        for(int k = 0; k < width*depth; k++){
+            if(structure[k].equals(key)){
+                count++;
+            }
+        }
+        BlockPos[] list = new BlockPos[count];
+        Block block = dictionary.get(key);
+        int counttrack = 0;
+        for(int xx = 0; xx < width; xx++){
+            for(int zz = 0; zz < depth; zz++){
+                if(block != null){
+                    BlockPos target = new BlockPos(topLeftCorner.getX() + xx, topLeftCorner.getY(), topLeftCorner.getZ()+zz);
+                    Block block2 = level.getBlockState(target).getBlock();
+                    if(block2 == block){
+                        list[counttrack] = target;
+                        counttrack++;
+                    }
+                }
+            }
+        }
+        return list;
+    }
     public boolean checkIfAssembled(Level level, BlockPos topLeftCorner){
         boolean valid = true;
         for(int xx = 0; xx < width; xx++){

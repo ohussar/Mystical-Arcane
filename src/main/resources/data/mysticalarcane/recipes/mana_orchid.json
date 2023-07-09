@@ -1,0 +1,12 @@
+{
+    "type": "mysticalarcane:mana_creator",
+    "ingredients": [
+        {
+            "item": "minecraft:blue_orchid"
+        }
+    ],
+    "output": {
+        "item": "mysticalarcane:mana_orchid"
+    },
+    "fuel": 4
+}

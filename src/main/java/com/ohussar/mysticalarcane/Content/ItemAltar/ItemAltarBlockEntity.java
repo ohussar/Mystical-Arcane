@@ -1,10 +1,8 @@
 package com.ohussar.mysticalarcane.Content.ItemAltar;
 
 import java.util.Optional;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
+import com.ohussar.mysticalarcane.API.IContentsChangedUpdate;
+import com.ohussar.mysticalarcane.Base.BlockEntityContainer;
 import com.ohussar.mysticalarcane.Base.ModBlockEntities;
 import com.ohussar.mysticalarcane.Base.ModParticles;
 import com.ohussar.mysticalarcane.Base.Multiblock;
@@ -16,7 +14,6 @@ import com.ohussar.mysticalarcane.Networking.SyncHeightModelAltar;
 import com.ohussar.mysticalarcane.Networking.SyncInventoryClient;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Containers;
@@ -27,25 +24,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-public class ItemAltarBlockEntity extends BlockEntity {
-    public ItemStackHandler holding = new ItemStackHandler(1){
-        @Override
-        protected void onContentsChanged(int slot){
-            setChanged();
-            if(!level.isClientSide()){
-                ModMessages.sendToClients(new SyncInventoryClient(this, worldPosition));
-            }
-        }
-    };
-
+public class ItemAltarBlockEntity extends BlockEntityContainer implements IContentsChangedUpdate {
     static String[] struct = {"k", "k", "x", "k", "k",
                               "k", "o", "o", "o", "k",
                               "x", "o", "a", "o", "x",
@@ -65,7 +47,6 @@ public class ItemAltarBlockEntity extends BlockEntity {
     public float craftingModelHeight = 0.7f;
     public float craftingModelHeightMax = 2.0f;
     private static int timer = 0;
-    private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
     public ItemAltarBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(ModBlockEntities.ITEM_ALTAR_ENTITY.get(), blockPos, blockState);
@@ -73,29 +54,25 @@ public class ItemAltarBlockEntity extends BlockEntity {
         structure.setDictionaryKey("o", Blocks.AIR);
         structure.setDictionaryKey("a", ModBlocks.ITEM_ALTAR.get());
         structure.setDictionaryKey("k", null);
+        this.holder = new ItemStackHandler(1){
+        @Override
+        protected void onContentsChanged(int slot){
+            setChanged();
+            if(!level.isClientSide()){
+                ModMessages.sendToClients(new SyncInventoryClient(this, worldPosition));
+                }
+            }
+        };
     }
-    @Override
-    public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if(cap == ForgeCapabilities.ITEM_HANDLER){
-            return lazyItemHandler.cast();
-        }
-        return super.getCapability(cap, side);
-    } 
-
     public void exchangeItem(ItemStack stack, Player player){
-        player.setItemInHand(InteractionHand.MAIN_HAND, holding.getStackInSlot(0));
-        holding.setStackInSlot(0, stack);
+        player.setItemInHand(InteractionHand.MAIN_HAND, holder.getStackInSlot(0));
+        holder.setStackInSlot(0, stack);
     }
 
     public ItemStack getHolding(){
-        return holding.getStackInSlot(0);
+        return holder.getStackInSlot(0);
     }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        lazyItemHandler = LazyOptional.of(() -> holding);
-    }
 
     public ClientboundBlockEntityDataPacket getUpdatePacket(){
         return ClientboundBlockEntityDataPacket.create(this);
@@ -103,23 +80,6 @@ public class ItemAltarBlockEntity extends BlockEntity {
 
     public CompoundTag getUpdateTag(){
         return saveWithFullMetadata();
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        lazyItemHandler.invalidate();
-    }
-    @Override
-    protected void saveAdditional(CompoundTag nbt) {
-        nbt.put("inventory", holding.serializeNBT());
-        super.saveAdditional(nbt);
-    }
-
-    @Override
-    public void load(CompoundTag nbt) {
-        super.load(nbt);
-        holding.deserializeNBT(nbt.getCompound("inventory"));
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, ItemAltarBlockEntity entity){
@@ -148,11 +108,6 @@ public class ItemAltarBlockEntity extends BlockEntity {
                             );
                     }
                 }
-
-
-
-
-
                 if(entity.craftingModelHeight >= entity.craftingModelHeightMax){
                     entity.craftingModelHeight = entity.craftingModelHeightMax;
                     entity.craftingStage = 1;
@@ -169,11 +124,11 @@ public class ItemAltarBlockEntity extends BlockEntity {
             if(entity.craftingStage == 2){
 
                     if(hasRecipe(entity)){
-                        int itemCount = entity.holding.getStackInSlot(0).getCount();
+                        int itemCount = entity.holder.getStackInSlot(0).getCount();
                         ModMessages.sendToClients(new SpawnParticles(ModParticles.MANA_PARTICLE.get(), 
                         new Vec3(pos.getX()+0.5, pos.getY() + 2, pos.getZ() + 0.5), itemCount * 4, 1, 1.25));
 
-                        entity.holding.setStackInSlot(0, 
+                        entity.holder.setStackInSlot(0, 
                         new ItemStack(getRecipe(entity).get().getResultItem().getItem(), itemCount));
 
                         int angles = (int)Math.ceil((double)itemCount/(double)limitPerFlower);
@@ -244,7 +199,7 @@ public class ItemAltarBlockEntity extends BlockEntity {
     private static Optional<ItemAltarRecipe> getRecipe(ItemAltarBlockEntity entity){
         Level level = entity.level;
         SimpleContainer inventory = new SimpleContainer(1);
-        inventory.setItem(0, entity.holding.getStackInSlot(0));
+        inventory.setItem(0, entity.holder.getStackInSlot(0));
 
         Optional<ItemAltarRecipe> recipe = level.getRecipeManager().getRecipeFor
         (ItemAltarRecipe.Type.INSTANCE, inventory, level); 
@@ -255,22 +210,26 @@ public class ItemAltarBlockEntity extends BlockEntity {
     }
 
     public void startCrafting(ItemAltarBlockEntity entity){
-        if(isAssembled && hasRecipe(entity) && entity.holding.getStackInSlot(0).getCount() <= (limitPerFlower * flowerCount)){
+        if(isAssembled && hasRecipe(entity) && entity.holder.getStackInSlot(0).getCount() <= (limitPerFlower * flowerCount)){
             isCrafting = true;
         }
     }
 
     public void setHandler(ItemStackHandler itemStackHandler) {
         for(int i = 0; i < itemStackHandler.getSlots(); i++){
-            holding.setStackInSlot(i, itemStackHandler.getStackInSlot(i));
+            holder.setStackInSlot(i, itemStackHandler.getStackInSlot(i));
         }
     }
 
     public void drops(){
-        SimpleContainer inventory = new SimpleContainer(holding.getSlots());
-        for(int i = 0; i < holding.getSlots(); i++){
-            inventory.setItem(i, holding.getStackInSlot(i));
+        SimpleContainer inventory = new SimpleContainer(holder.getSlots());
+        for(int i = 0; i < holder.getSlots(); i++){
+            inventory.setItem(i, holder.getStackInSlot(i));
         }
         Containers.dropContents(this.level, this.worldPosition, inventory);
+    }
+    @Override
+    public void onContentsChanged(ItemStackHandler handler) {
+        setHandler(handler);
     }
 }

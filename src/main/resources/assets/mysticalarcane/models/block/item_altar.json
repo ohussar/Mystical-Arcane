@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"1": "mysticalarcane:blocks/itemaltar",
-		"particle": "minecraft:blocks/itemaltar"
+		"particle": "mysticalarcane:blocks/itemaltar"
 	},
 	"elements": [
 		{
