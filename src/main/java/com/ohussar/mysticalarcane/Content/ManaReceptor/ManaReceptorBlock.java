@@ -26,7 +26,7 @@ public class ManaReceptorBlock extends Block {
     }
 
     private static final VoxelShape SHAPE = 
-    Block.box(3, 0, 3, 13, 16, 13);
+    Block.box(0, 0, 0, 16, 10, 16);
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
         builder.add(FACING);

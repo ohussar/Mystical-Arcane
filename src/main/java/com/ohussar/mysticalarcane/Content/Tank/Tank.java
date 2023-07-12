@@ -20,7 +20,7 @@ public class Tank extends AbstractManaBlock {
     public Tank(Properties p_49224_) {
         super(p_49224_);
     }
-
+    
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player,
             InteractionHand interactionHand, BlockHitResult blockHit) {

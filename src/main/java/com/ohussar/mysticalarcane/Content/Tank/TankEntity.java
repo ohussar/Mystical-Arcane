@@ -1,5 +1,6 @@
 package com.ohussar.mysticalarcane.Content.Tank;
-import com.ohussar.mysticalarcane.Main;
+import org.jetbrains.annotations.NotNull;
+
 import com.ohussar.mysticalarcane.API.IContentsChangedUpdate;
 import com.ohussar.mysticalarcane.API.IVariablesUpdate;
 import com.ohussar.mysticalarcane.Base.BlockEntityContainer;
@@ -19,20 +20,23 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.WaterFluid;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class TankEntity extends BlockEntityContainer implements IContentsChangedUpdate, IVariablesUpdate {
-
+public class TankEntity extends BlockEntityContainer implements IContentsChangedUpdate, IVariablesUpdate, IFluidHandler {
+    
     private String[] map = {"o", "o", "x", "o", "o",
                             "o", "o", "p", "o", "o",
                             "x", "p", "t", "p", "x",
                             "o", "o", "p", "o", "o",
                             "o", "o", "x", "o", "o" };
     Multiblock multi = new Multiblock(map, 5, 5);
-
+    
     public TankEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.TANK_ENTITY.get(), pos, state);
         this.holder = new ItemStackHandler(1){
@@ -53,6 +57,7 @@ public class TankEntity extends BlockEntityContainer implements IContentsChanged
     protected Item fuel = Items.REDSTONE;
     protected int fuelCount = 0;
     public int maxFuelCount = 8;
+    private int fluidCapacity = 1000; // mb
 
     public boolean onItemClick(ItemStack stack, Player player){
         if(stack.getItem() == fuel){
@@ -70,13 +75,11 @@ public class TankEntity extends BlockEntityContainer implements IContentsChanged
         if(multi.checkIfAssembled(level, worldPosition.offset(-2, 0, -2))){
             BlockPos[] list = multi.getListOfBlocksPlaced("x", level, worldPosition.offset(-2, 0, -2));
             boolean valid = true;
-            Main.LOGGER.info(Integer.toString(list.length));
             for(int k = 0; k < list.length; k++){
                 BlockState state = level.getBlockState(list[k]);
                 if(state.getBlock() instanceof ManaReceptorBlock block){
                     BlockPos newpos = list[k];
                     newpos = newpos.relative(state.getValue(DirectionalBlock.FACING), 2);
-                    Main.LOGGER.info(newpos.toString());
                     if(!(level.getBlockState(newpos).getBlock() instanceof Tank)){
                         valid = false;
                     }
@@ -132,5 +135,40 @@ public class TankEntity extends BlockEntityContainer implements IContentsChanged
         setHandler(handler);
     }
 
+    @Override
+    public int getTanks() {
+        return 1;
+    }
+
+    @Override
+    public @NotNull FluidStack getFluidInTank(int tank) {
+        return null;
+    }
+
+    @Override
+    public int getTankCapacity(int tank) {
+        return this.fluidCapacity;
+    }
+
+    @Override
+    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+        return false;
+    }
+
+    @Override
+    public int fill(FluidStack resource, FluidAction action) {
+        return 1;
+    }
+
+    @Override
+    public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
+        return FluidStack.EMPTY;
+    }
+
+    @Override
+    public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
+        return FluidStack.EMPTY;
+    }
+    
 
 }
