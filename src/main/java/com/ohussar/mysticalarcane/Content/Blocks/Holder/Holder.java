@@ -1,9 +1,9 @@
-package com.ohussar.mysticalarcane.Content.Holder;
+package com.ohussar.mysticalarcane.Content.Blocks.Holder;
 
 import com.ohussar.mysticalarcane.Base.AbstractManaBlock;
 import com.ohussar.mysticalarcane.Base.ModBlockEntities;
 import com.ohussar.mysticalarcane.Content.ModBlocks;
-import com.ohussar.mysticalarcane.Content.ArcaneWand.ArcaneWand;
+import com.ohussar.mysticalarcane.Content.Items.ArcaneWand.ArcaneWand;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;

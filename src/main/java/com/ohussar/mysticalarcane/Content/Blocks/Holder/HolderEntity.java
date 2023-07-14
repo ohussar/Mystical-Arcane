@@ -1,4 +1,4 @@
-package com.ohussar.mysticalarcane.Content.Holder;
+package com.ohussar.mysticalarcane.Content.Blocks.Holder;
 
 import java.util.Optional;
 
@@ -8,8 +8,8 @@ import com.ohussar.mysticalarcane.Base.BlockEntityContainer;
 import com.ohussar.mysticalarcane.Base.ModBlockEntities;
 import com.ohussar.mysticalarcane.Base.ModParticles;
 import com.ohussar.mysticalarcane.Content.ModBlocks;
+import com.ohussar.mysticalarcane.Content.Blocks.Tank.TankEntity;
 import com.ohussar.mysticalarcane.Content.Recipes.HolderRecipe;
-import com.ohussar.mysticalarcane.Content.Tank.TankEntity;
 import com.ohussar.mysticalarcane.Networking.ModMessages;
 import com.ohussar.mysticalarcane.Networking.SpawnParticles;
 import com.ohussar.mysticalarcane.Networking.SyncInventoryClient;
@@ -51,9 +51,9 @@ public class HolderEntity extends BlockEntityContainer implements IContentsChang
         if(hasRecipe(entity)){
             BlockEntity below = level.getBlockEntity(entity.worldPosition.below());
             if(below instanceof TankEntity blockEntity){
-                int con = blockEntity.getFuelCount() - getRecipe(entity).get().getFuelConsume();
+                int con = blockEntity.getFluidCount() - getRecipe(entity).get().getFluidConsume();
                 if(con >= 0){
-                    blockEntity.setFuelCount(con);
+                    blockEntity.setFluidCount(con);
                     blockEntity.SyncVariables();
                     holder.setStackInSlot(0, getRecipe(entity).get().getResultItem());
                     ModMessages.sendToClients(new SpawnParticles(

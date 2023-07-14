@@ -2,9 +2,9 @@ package com.ohussar.mysticalarcane.Base;
 
 import com.ohussar.mysticalarcane.Main;
 import com.ohussar.mysticalarcane.Content.ModBlocks;
-import com.ohussar.mysticalarcane.Content.Holder.HolderEntity;
-import com.ohussar.mysticalarcane.Content.ItemAltar.ItemAltarBlockEntity;
-import com.ohussar.mysticalarcane.Content.Tank.TankEntity;
+import com.ohussar.mysticalarcane.Content.Blocks.Holder.HolderEntity;
+import com.ohussar.mysticalarcane.Content.Blocks.ItemAltar.ItemAltarBlockEntity;
+import com.ohussar.mysticalarcane.Content.Blocks.Tank.TankEntity;
 
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;

@@ -1,6 +1,7 @@
-package com.ohussar.mysticalarcane.Content.Tank;
+package com.ohussar.mysticalarcane.Content.Blocks.Tank;
 
 import com.ohussar.mysticalarcane.Base.AbstractManaBlock;
+import com.ohussar.mysticalarcane.Base.ModBlockEntities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -11,6 +12,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -46,7 +49,12 @@ public class Tank extends AbstractManaBlock {
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext context){
         return SHAPE;
     }
-
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState,
+            BlockEntityType<T> blockEntityType) {
+        
+        return createTickerHelper(blockEntityType, ModBlockEntities.TANK_ENTITY.get(), TankEntity::tick);
+    }
     @Override
     public RenderShape getRenderShape(BlockState p_60550_) {
         return RenderShape.MODEL;

@@ -3,16 +3,20 @@ package com.ohussar.mysticalarcane;
 import com.mojang.logging.LogUtils;
 import com.ohussar.mysticalarcane.Base.ModBlockEntities;
 import com.ohussar.mysticalarcane.Base.ModEntities;
+import com.ohussar.mysticalarcane.Base.ModFluidTypes;
+import com.ohussar.mysticalarcane.Base.ModFluids;
 import com.ohussar.mysticalarcane.Base.ModParticles;
 import com.ohussar.mysticalarcane.Base.ModRecipes;
 import com.ohussar.mysticalarcane.Content.ModBlocks;
 import com.ohussar.mysticalarcane.Content.ModItems;
-import com.ohussar.mysticalarcane.Content.Holder.HolderEntityRenderer;
-import com.ohussar.mysticalarcane.Content.ItemAltar.ItemAltarBlockEntityRender;
+import com.ohussar.mysticalarcane.Content.Blocks.Holder.HolderEntityRenderer;
+import com.ohussar.mysticalarcane.Content.Blocks.ItemAltar.ItemAltarBlockEntityRender;
+import com.ohussar.mysticalarcane.Content.Blocks.Tank.TankEntityRender;
 import com.ohussar.mysticalarcane.Content.Particles.ManaParticle;
-import com.ohussar.mysticalarcane.Content.Tank.TankEntityRender;
 import com.ohussar.mysticalarcane.Networking.ModMessages;
 
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -24,6 +28,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -60,6 +65,8 @@ public class Main
         LOGGER.info("Registered entities types from " + MODID + "!");
         ModParticles.RegisterParticleTypes(modEventBus);
         ModRecipes.registerRecipes(modEventBus);
+        ModFluids.register(modEventBus);
+        ModFluidTypes.register(modEventBus);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -90,5 +97,11 @@ public class Main
         public static void registerParticleFactories(final RegisterParticleProvidersEvent event){
             event.register(ModParticles.MANA_PARTICLE.get(), ManaParticle.Provider::new);
         }
+        @SubscribeEvent
+        public static void onClientSetup(FMLClientSetupEvent event){
+            ItemBlockRenderTypes.setRenderLayer(ModFluids.SOURCE_MANA_WATER.get(), RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModFluids.FLOWING_MANA_WATER.get(), RenderType.translucent());
+        }
+
     }
 }

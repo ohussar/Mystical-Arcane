@@ -1,16 +1,18 @@
 package com.ohussar.mysticalarcane.Content;
 
 import com.ohussar.mysticalarcane.Main;
-import com.ohussar.mysticalarcane.Content.Holder.Holder;
-import com.ohussar.mysticalarcane.Content.ItemAltar.ItemAltarBlock;
-import com.ohussar.mysticalarcane.Content.ManaReceptor.ManaReceptorBlock;
-import com.ohussar.mysticalarcane.Content.Tank.Tank;
+import com.ohussar.mysticalarcane.Base.ModFluids;
+import com.ohussar.mysticalarcane.Content.Blocks.Holder.Holder;
+import com.ohussar.mysticalarcane.Content.Blocks.ItemAltar.ItemAltarBlock;
+import com.ohussar.mysticalarcane.Content.Blocks.ManaReceptor.ManaReceptorBlock;
+import com.ohussar.mysticalarcane.Content.Blocks.Tank.Tank;
 
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockBehaviour.OffsetType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -33,6 +35,9 @@ public class ModBlocks {
     () -> new Holder(BlockBehaviour.Properties.copy(Blocks.SPRUCE_PLANKS).noOcclusion()));
     public static final RegistryObject<Block> MANA_RECEPTOR = BLOCKS.register("mana_receptor", 
     () -> new ManaReceptorBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
+    public static final RegistryObject<LiquidBlock> MANA_WATER_BLOCK = BLOCKS.register("mana_water_block",
+    () -> new LiquidBlock(ModFluids.SOURCE_MANA_WATER, BlockBehaviour.Properties.copy(Blocks.WATER)));
+
     public static void registerBlocks(IEventBus bus){
         BLOCKS.register(bus);
     }

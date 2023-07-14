@@ -1,4 +1,4 @@
-package com.ohussar.mysticalarcane.Content.Holder;
+package com.ohussar.mysticalarcane.Content.Blocks.Holder;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;

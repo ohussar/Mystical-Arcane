@@ -8,5 +8,5 @@
     "output": {
         "item": "mysticalarcane:mana_orchid"
     },
-    "fuel": 4
+    "fluid": 500
 }

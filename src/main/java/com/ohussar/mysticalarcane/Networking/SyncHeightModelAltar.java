@@ -2,7 +2,7 @@ package com.ohussar.mysticalarcane.Networking;
 
 import java.util.function.Supplier;
 
-import com.ohussar.mysticalarcane.Content.ItemAltar.ItemAltarBlockEntity;
+import com.ohussar.mysticalarcane.Content.Blocks.ItemAltar.ItemAltarBlockEntity;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;

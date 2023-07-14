@@ -27,4 +27,8 @@ public class UtilFunctions {
    public static Vec3 toVec3Offset(BlockPos pos, double xx, double yy, double zz){
       return new Vec3(pos.getX() + xx, pos.getY() + yy, pos.getZ() + zz);
    }
+
+   public static Vec3 toVec3(BlockPos pos){
+      return new Vec3(pos.getX(), pos.getY(), pos.getZ());
+   }
 }

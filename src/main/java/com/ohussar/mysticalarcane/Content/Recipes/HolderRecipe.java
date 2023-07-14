@@ -23,13 +23,13 @@ public class HolderRecipe implements Recipe<SimpleContainer>{
     private final ResourceLocation id;
     private final ItemStack output;
     private final NonNullList<Ingredient> recipeItems;
-    private final int fuelConsume;
+    private final int fluidConsume;
 
-    public HolderRecipe(ResourceLocation id, ItemStack output, NonNullList<Ingredient> recipeItems, int fuelConsume){
+    public HolderRecipe(ResourceLocation id, ItemStack output, NonNullList<Ingredient> recipeItems, int fluidConsume){
         this.id = id;
         this.output = output;
         this.recipeItems = recipeItems;
-        this.fuelConsume = fuelConsume;
+        this.fluidConsume = fluidConsume;
     }
 
     @Override
@@ -54,8 +54,8 @@ public class HolderRecipe implements Recipe<SimpleContainer>{
     public ItemStack getResultItem() {
         return output.copy();
     }
-    public int getFuelConsume(){
-        return fuelConsume;
+    public int getFluidConsume(){
+        return fluidConsume;
     }
     @Override
     public ResourceLocation getId() {
@@ -86,7 +86,7 @@ public class HolderRecipe implements Recipe<SimpleContainer>{
         public HolderRecipe fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
             ItemStack output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(jsonObject, "output")); 
             JsonArray ingredients = GsonHelper.getAsJsonArray(jsonObject,"ingredients");
-            int consume = jsonObject.get("fuel").getAsInt();
+            int consume = jsonObject.get("fluid").getAsInt();
             NonNullList<Ingredient> inputs = NonNullList.withSize(1, Ingredient.EMPTY);
             if(ingredients.size() > 1){
                 throw new IllegalArgumentException(String.format("Invalid recipe {}, expected only 1 ingredient, got {}", resourceLocation.getPath(), ingredients.size()));
@@ -122,7 +122,7 @@ public class HolderRecipe implements Recipe<SimpleContainer>{
                 ing.toNetwork(buf);
             }
             buf.writeItemStack(recipe.getResultItem(), false);
-            buf.writeInt(recipe.fuelConsume);
+            buf.writeInt(recipe.fluidConsume);
         }
     }
 }

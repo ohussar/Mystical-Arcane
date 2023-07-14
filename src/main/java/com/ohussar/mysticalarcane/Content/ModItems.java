@@ -1,10 +1,13 @@
 package com.ohussar.mysticalarcane.Content;
 
 import com.ohussar.mysticalarcane.Main;
-import com.ohussar.mysticalarcane.Content.ArcaneWand.ArcaneWand;
+import com.ohussar.mysticalarcane.Base.ModFluids;
+import com.ohussar.mysticalarcane.Content.Items.ArcaneWand.ArcaneWand;
 
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -26,7 +29,8 @@ public class ModItems {
 
     public static final RegistryObject<Item> ARCANE_WAND = ITEMS.register("arcane_wand", 
     () -> new ArcaneWand(new Item.Properties().durability(300).tab(Main.TAB)));
-
+    public static final RegistryObject<Item> MANA_WATER_BUCKET = ITEMS.register("mana_bucket", 
+    () -> new BucketItem(ModFluids.SOURCE_MANA_WATER, new Item.Properties().tab(Main.TAB).craftRemainder(Items.BUCKET).stacksTo(1)));
     
 
     public static final RegistryObject<Item> MANA_INGOT = ITEMS.register("mana_ingot",

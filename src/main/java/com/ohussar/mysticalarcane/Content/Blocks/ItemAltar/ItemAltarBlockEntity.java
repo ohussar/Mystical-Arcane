@@ -1,4 +1,4 @@
-package com.ohussar.mysticalarcane.Content.ItemAltar;
+package com.ohussar.mysticalarcane.Content.Blocks.ItemAltar;
 
 import java.util.Optional;
 import com.ohussar.mysticalarcane.API.IContentsChangedUpdate;

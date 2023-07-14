@@ -1,4 +1,4 @@
-package com.ohussar.mysticalarcane.Content.ArcaneWand;
+package com.ohussar.mysticalarcane.Content.Items.ArcaneWand;
 
 import com.ohussar.mysticalarcane.API.UtilFunctions;
 import com.ohussar.mysticalarcane.Base.AbstractManaBlock;

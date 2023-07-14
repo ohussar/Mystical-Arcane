@@ -1,4 +1,4 @@
-package com.ohussar.mysticalarcane.Content.ManaReceptor;
+package com.ohussar.mysticalarcane.Content.Blocks.ManaReceptor;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -55,12 +55,12 @@ description='''
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="BOTH"
-#[[dependencies.myarcane]]
-#    modId="create"
-#    mandatory=true
-#    versionRange="[0.5.0.i,)"
-#   ordering="NONE"
-#    side="BOTH"
+[[dependencies.myarcane]]
+    modId="create"
+    mandatory=true
+    versionRange="[0.5.1.c,)"
+    ordering="NONE"
+    side="BOTH"
 # Here's another dependency
 [[dependencies.myarcane]]
     modId="minecraft"
