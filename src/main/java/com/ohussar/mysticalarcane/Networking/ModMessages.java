@@ -47,6 +47,11 @@ public class ModMessages {
                 .encoder(SyncVariables::toBytes)
                 .consumerMainThread(SyncVariables::handle)
                 .add();
+        net.messageBuilder(ButtonCall.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(ButtonCall::new)
+                .encoder(ButtonCall::toBytes)
+                .consumerMainThread(ButtonCall::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

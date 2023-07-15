@@ -92,15 +92,13 @@ public class Holder extends AbstractManaBlock {
         ItemStack stack = player.getMainHandItem();
         if(!level.isClientSide() && interactionHand == InteractionHand.MAIN_HAND){
             BlockEntity blockEntity = level.getBlockEntity(blockPos);
-            if(blockEntity instanceof HolderEntity &&
+            if(blockEntity instanceof HolderEntity entity &&
                 !(stack.getItem() instanceof ArcaneWand) ){
 
-                 ((HolderEntity) blockEntity).onClick(level, player);
+                 ((HolderEntity) blockEntity).onClick(level, player, entity, blockPos);
 
 
                 return InteractionResult.SUCCESS;
-            }else if(stack.getItem() instanceof ArcaneWand){
-                return InteractionResult.PASS;
             }
         }
         if(stack.getItem() instanceof ArcaneWand){

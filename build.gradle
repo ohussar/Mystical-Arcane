@@ -18,10 +18,6 @@ plugins {
     id 'net.minecraftforge.gradle' version '5.1.+'
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
-apply plugin: 'org.spongepowered.mixin'
-
 version = '1.0'
 group = 'com.ohussar.mysticalarcane' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'mysticalarcane'
@@ -166,7 +162,9 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 }
-
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.parchmentmc.librarian.forgegradle'
+apply plugin: 'org.spongepowered.mixin'
 // Example for how to get properties into the manifest for reading at runtime.
 jar {
     manifest {

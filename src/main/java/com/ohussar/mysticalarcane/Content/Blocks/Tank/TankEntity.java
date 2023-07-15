@@ -63,10 +63,11 @@ public class TankEntity extends BlockEntityContainer implements IContentsChanged
     }
     private int manaTimer = 0;
     protected Item fuel = Items.REDSTONE;
-    protected int fuelCount = 0;
-    public int maxFuelCount = 8;
     private int fluidCapacity = 2000; // mb
     private int fluidCount = 0;
+    private boolean isAssembled = false;
+    private int checkStructureTimer = 0;
+
     public boolean onItemClick(ItemStack stack, Player player){
         if(stack.getItem() == ModItems.MANA_WATER_BUCKET.get()){
             if(fluidCapacity-fluidCount >= 1000){
@@ -108,29 +109,48 @@ public class TankEntity extends BlockEntityContainer implements IContentsChanged
         if(level.isClientSide()){
             return;
         }
+
+        entity.checkStructureTimer++;
+        if(entity.checkStructureTimer >= 10){
+            entity.checkStructureTimer = 0;
+            entity.isAssembled = entity.checkAssembled(level);
+        }
+
+
+        if(entity.checkStructureTimer % 3 == 0 && entity.checkAssembled(level)){
+            BlockPos[] list = entity.multi.getListOfBlocksPlaced("x", level, pos.offset(-2, 0, -2));
+            for(int k = 0; k < list.length; k++){
+                BlockState s = level.getBlockState(list[k]);
+                if(s.getBlock() instanceof ManaReceptorBlock){
+                    Direction dir = s.getValue(DirectionalBlock.FACING).getOpposite();
+                    int mult = 1;
+                    double bbx = 0;
+                    double bby = 0;
+                    if(dir == Direction.WEST || dir == Direction.NORTH){
+                        mult = -1;
+                        if(dir == Direction.NORTH){
+                            bby = 0.5;
+                        }else{
+                            bbx = 0.5;
+                        }
+                    }
+                    ModMessages.sendToClients(new SpawnParticles(ModParticles.MANA_PARTICLE.get(), 
+                    UtilFunctions.toVec3Offset(list[k]              , dir.getStepZ()*0.5*mult+bbx, 0.3, dir.getStepX()*0.5*mult+bby), 
+                    UtilFunctions.toVec3Offset(pos.relative(dir)    , dir.getStepZ()*0.5*mult+bbx, 0.3, dir.getStepX()*0.5*mult+bby), 
+                    2, 0.15));
+                }
+            }
+        }
+
         entity.manaTimer--;
         if(entity.manaTimer <= 0){
             Random rand = new Random();
             entity.manaTimer = Math.max(5, rand.nextInt(45));
             
-            if(entity.checkAssembled(level)){
+            if(entity.isAssembled){
                 entity.fluidCount += 1+rand.nextInt(15);
                 entity.SyncVariables();
-                BlockPos[] list = entity.multi.getListOfBlocksPlaced("x", level, pos.offset(-2, 0, -2));
-                for(int k = 0; k < list.length; k++){
-                    BlockState s = level.getBlockState(list[k]);
-                    if(s.getBlock() instanceof ManaReceptorBlock){
-                        Direction dir = s.getValue(DirectionalBlock.FACING);
-                        
-                        ModMessages.sendToClients(new SpawnParticles(ModParticles.MANA_PARTICLE.get(), 
-                        UtilFunctions.toVec3Offset(list[k], -dir.getStepZ()*0.5, 0.3, dir.getStepX()*0.5), 
-                        UtilFunctions.toVec3Offset(pos    , -dir.getStepZ()*0.5, 0.3, dir.getStepX()*0.5), 
-                        4, 0.15));
-                    }
-                }
-
             }
-
         }
 
     }

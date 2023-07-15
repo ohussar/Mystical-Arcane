@@ -5,5 +5,9 @@
     "item.mysticalarcane.mana_ingot": "§cMana Ingot",
     "block.mysticalarcane.holder": "Item Stand",
     "block.mysticalarcane.tank": "Basin",
-    "itemGroup.mysticalarcane": "Mystical Arcane"
+    "itemGroup.mysticalarcane": "Mystical Arcane",
+    "menu.holder.title": "Item Stand",
+    "menu.holder.button": "Infuse",
+    "item.mysticalarcane.mana_bucket": "§cMana Bucket",
+    "block.mysticalarcane.mana_receptor": "Mana Receptor"
 }

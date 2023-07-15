@@ -5,16 +5,19 @@ import com.ohussar.mysticalarcane.Base.ModBlockEntities;
 import com.ohussar.mysticalarcane.Base.ModEntities;
 import com.ohussar.mysticalarcane.Base.ModFluidTypes;
 import com.ohussar.mysticalarcane.Base.ModFluids;
+import com.ohussar.mysticalarcane.Base.ModMenus;
 import com.ohussar.mysticalarcane.Base.ModParticles;
 import com.ohussar.mysticalarcane.Base.ModRecipes;
 import com.ohussar.mysticalarcane.Content.ModBlocks;
 import com.ohussar.mysticalarcane.Content.ModItems;
 import com.ohussar.mysticalarcane.Content.Blocks.Holder.HolderEntityRenderer;
+import com.ohussar.mysticalarcane.Content.Blocks.Holder.HolderScreen;
 import com.ohussar.mysticalarcane.Content.Blocks.ItemAltar.ItemAltarBlockEntityRender;
 import com.ohussar.mysticalarcane.Content.Blocks.Tank.TankEntityRender;
 import com.ohussar.mysticalarcane.Content.Particles.ManaParticle;
 import com.ohussar.mysticalarcane.Networking.ModMessages;
 
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -67,6 +70,7 @@ public class Main
         ModRecipes.registerRecipes(modEventBus);
         ModFluids.register(modEventBus);
         ModFluidTypes.register(modEventBus);
+        ModMenus.register(modEventBus);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -101,6 +105,7 @@ public class Main
         public static void onClientSetup(FMLClientSetupEvent event){
             ItemBlockRenderTypes.setRenderLayer(ModFluids.SOURCE_MANA_WATER.get(), RenderType.translucent());
             ItemBlockRenderTypes.setRenderLayer(ModFluids.FLOWING_MANA_WATER.get(), RenderType.translucent());
+            MenuScreens.register(ModMenus.HOLDER_MENU.get(), HolderScreen::new);
         }
 
     }
